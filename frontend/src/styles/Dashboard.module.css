@@ -1,0 +1,67 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.welcomeSection {
+  padding: 24px 0;
+  text-align: center;
+}
+
+.welcomeSection h2 {
+  font-size: 1.75rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.welcomeSection p {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  background-color: var(--bot-message-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.card:hover {
+  background-color: #2a3039;
+  transform: translateY(-2px);
+}
+
+.cardIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.cardContent h3 {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.cardContent p {
+  font-size: 0.9rem;
+  color: #8b949e;
+  line-height: 1.4;
+}

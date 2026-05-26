@@ -1,0 +1,89 @@
+:root {
+  --bg-color: #0d1117;
+  --text-color: #c9d1d9;
+  --primary-color: #238636;
+  --primary-hover: #2ea043;
+  --message-bg: #161b22;
+  --user-message-bg: #1f6feb;
+  --bot-message-bg: #21262d;
+  --border-color: #30363d;
+  --input-bg: #0d1117;
+  --accent-color: #58a6ff;
+  
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 768px; /* Mobile first, but centered on desktop */
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.header {
+  padding: 16px;
+  background-color: var(--message-bg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Scrollbar hiding for better mobile look */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.main-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--bot-message-bg) 25%, var(--border-color) 50%, var(--bot-message-bg) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

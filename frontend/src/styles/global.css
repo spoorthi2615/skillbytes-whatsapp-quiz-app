@@ -1,0 +1,54 @@
+:root {
+  --wa-green-light: #25D366;
+  --wa-green-dark: #128C7E;
+  --wa-teal: #075E54;
+  --wa-bg-light: #E5DDD5;
+  --wa-bg-dark: #0B141A;
+  --wa-chat-bubble-received: #FFFFFF;
+  --wa-chat-bubble-received-dark: #202C33;
+  --wa-chat-bubble-sent: #DCF8C6;
+  --wa-chat-bubble-sent-dark: #005C4B;
+  --wa-text-light: #111B21;
+  --wa-text-dark: #E9EDEF;
+  --wa-meta-text: #667781;
+  --wa-meta-text-dark: #8696A0;
+  
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--wa-bg-dark);
+  color: var(--wa-text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--wa-bg-dark);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
