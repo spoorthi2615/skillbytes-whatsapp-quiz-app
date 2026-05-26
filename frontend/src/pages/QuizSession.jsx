@@ -64,7 +64,7 @@ export default function QuizSession() {
           return;
         }
 
-        const startRes = await quizApi.startQuiz(userId, chapterId);
+        const startRes = await quizApi.startQuiz(userId, chapterId, qRes.data.length);
         
         setSession(startRes.data.session_id, chapterId, qRes.data);
         setIsTyping(true);

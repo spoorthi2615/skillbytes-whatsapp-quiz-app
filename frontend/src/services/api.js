@@ -41,8 +41,12 @@ export const quizApi = {
     const res = await api.get(`/api/chapters/${chapterId}/questions`);
     return res.data;
   },
-  startQuiz: async (userId, chapterId) => {
-    const res = await api.post('/api/quiz/start', { user_id: userId, chapter_id: chapterId });
+  startQuiz: async (userId, chapterId, totalQuestions) => {
+    const res = await api.post('/api/quiz/start', {
+      user_id: userId,
+      chapter_id: chapterId,
+      total_questions: totalQuestions  // actual sampled count, NOT full DB count
+    });
     return res.data;
   },
   submitAnswer: async (sessionId, questionId, optionId, durationMs) => {

@@ -62,6 +62,7 @@ class QuizEvent(MongoBaseModel):
 class StartQuizRequest(BaseModel):
     user_id: str
     chapter_id: str
+    total_questions: int  # Count of questions actually sampled and sent to the client
 
 class AnswerRequest(BaseModel):
     question_id: str

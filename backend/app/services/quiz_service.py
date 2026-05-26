@@ -14,9 +14,10 @@ class QuizService:
         else:
             await user_repo.update(request.user_id, {"last_active_at": now})
 
-        # Fetch questions for total count
-        questions = await question_repo.get_all({"chapter_id": request.chapter_id})
-        total_questions = len(questions)
+        # Use the question count from the frontend (the actual sampled subset)
+        # This prevents a mismatch between the randomized 5-question session
+        # and the full chapter count (which could be 8-12)
+        total_questions = request.total_questions
 
         session_id = str(ObjectId())
         session_data = {
@@ -32,22 +33,6 @@ class QuizService:
             "accuracy_percentage": 0.0
         }
         await session_repo.create(session_data)
-        
-        # Optionally create an event for the first question shown
-        if total_questions > 0:
-            first_q = questions[0]
-            await event_repo.create({
-                "_id": str(ObjectId()),
-                "session_id": session_id,
-                "user_id": request.user_id,
-                "question_id": first_q["_id"],
-                "event_type": "question_shown",
-                "shown_at": now,
-                "answered_at": None,
-                "duration_ms": None,
-                "selected_option_id": None,
-                "is_correct": None
-            })
 
         return {"session_id": session_id, "total_questions": total_questions}
 
