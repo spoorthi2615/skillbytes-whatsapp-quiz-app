@@ -5,12 +5,13 @@
 
 # Python/Backend
 backend/venv/
-backend/__pycache__/
+**/__pycache__/
 backend/*.py[cod]
 backend/*$py.class
 backend/.pytest_cache/
 backend/alembic.ini
 backend/app.db
+backend/logs/
 
 # Node/Frontend
 frontend/node_modules/

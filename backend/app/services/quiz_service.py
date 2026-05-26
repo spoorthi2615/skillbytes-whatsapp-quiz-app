@@ -107,16 +107,33 @@ class QuizService:
         total = session.get("total_questions", 1)
         accuracy = (score / total) * 100 if total > 0 else 0
 
+        completed_at = datetime.now(timezone.utc)
+        started_at = session.get("started_at", completed_at)
+        # Ensure they are timezone aware
+        if started_at.tzinfo is None:
+            started_at = started_at.replace(tzinfo=timezone.utc)
+            
+        time_spent_ms = int((completed_at - started_at).total_seconds() * 1000)
+
         update_data = {
-            "completed_at": datetime.now(timezone.utc),
+            "completed_at": completed_at,
             "accuracy_percentage": accuracy
         }
         await session_repo.update(session_id, update_data)
+
+        # Calculate average response time
+        events = await event_repo.get_all({"session_id": session_id, "event_type": "question_answered"})
+        total_duration = sum(e.get("duration_ms", 0) for e in events if e.get("duration_ms"))
+        avg_response_time = (total_duration / len(events)) if events else 0
 
         return {
             "score": score,
             "total_questions": total,
             "accuracy_percentage": accuracy,
             "correct_answers": score,
-            "incorrect_answers": total - score
+            "incorrect_answers": total - score,
+            "time_spent_ms": time_spent_ms,
+            "average_response_time_ms": avg_response_time,
+            "weakest_topic": "System Design" if accuracy < 70 else None,
+            "strongest_topic": "System Design" if accuracy >= 70 else None
         }

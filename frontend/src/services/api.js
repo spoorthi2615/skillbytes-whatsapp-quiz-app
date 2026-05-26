@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
@@ -11,7 +12,14 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+    const errorMsg = error.response?.data?.detail || error.response?.data?.message || error.message;
+    console.error('API Error:', errorMsg);
+    
+    // Skip toast for 404s if it's just polling or expected behavior
+    if (error.response?.status !== 404) {
+      toast.error(typeof errorMsg === 'string' ? errorMsg : "An error occurred");
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -49,8 +57,9 @@ export const quizApi = {
     const res = await api.post(`/api/quiz/${sessionId}/complete`);
     return res.data;
   },
-  fetchAnalytics: async () => {
-    const res = await api.get('/api/analytics/dashboard');
+  fetchAnalytics: async (userId = null) => {
+    const url = userId ? `/api/analytics/dashboard?user_id=${userId}` : '/api/analytics/dashboard';
+    const res = await api.get(url);
     return res.data;
   },
 };

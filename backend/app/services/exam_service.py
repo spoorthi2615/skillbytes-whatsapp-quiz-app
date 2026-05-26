@@ -1,4 +1,5 @@
 from app.repositories.quiz_repo import exam_repo, subject_repo, chapter_repo, question_repo
+import random
 
 class ExamService:
     @staticmethod
@@ -15,4 +16,15 @@ class ExamService:
 
     @staticmethod
     async def get_questions_by_chapter(chapter_id: str):
-        return await question_repo.get_all({"chapter_id": chapter_id})
+        pipeline = [
+            {"$match": {"chapter_id": chapter_id}},
+            {"$sample": {"size": 5}}
+        ]
+        questions = await question_repo.aggregate(pipeline)
+        
+        # Shuffle options mathematically
+        for q in questions:
+            if "options" in q and isinstance(q["options"], list):
+                random.shuffle(q["options"])
+                
+        return questions
