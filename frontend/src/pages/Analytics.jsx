@@ -92,10 +92,36 @@ export default function Analytics() {
           <SkeletonCard />
         </div>
       ) : metrics.questions_answered === 0 && view === 'personal' ? (
-        <div style={{ textAlign: 'center', marginTop: '50px', color: '#8696A0' }}>
-          <p>You haven't taken any quizzes yet.</p>
-          <button onClick={() => navigate('/')} style={{ marginTop: '10px', padding: '10px 20px', borderRadius: '8px', backgroundColor: '#00A884', color: '#111B21', fontWeight: 'bold' }}>Start a Quiz</button>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          style={{ textAlign: 'center', marginTop: '60px', padding: '40px 20px' }}
+        >
+          <div style={{ fontSize: '64px', marginBottom: '20px' }}>📊</div>
+          <h2 style={{ color: '#E9EDEF', fontSize: '20px', marginBottom: '10px' }}>No Data Yet</h2>
+          <p style={{ color: '#8696A0', fontSize: '14px', lineHeight: '1.6', marginBottom: '30px' }}>
+            Take your first quiz to unlock insights and analytics.<br/>
+            Your stats will appear here once you start learning.
+          </p>
+          <motion.button
+            onClick={() => navigate('/')}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            style={{
+              padding: '14px 32px',
+              borderRadius: '24px',
+              backgroundColor: '#00A884',
+              color: '#111B21',
+              fontWeight: 'bold',
+              fontSize: '15px',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            🚀 Start Your First Quiz
+          </motion.button>
+        </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>

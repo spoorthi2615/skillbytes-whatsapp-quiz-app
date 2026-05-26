@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuizStore } from '../store/quizStore';
 import { quizApi } from '../services/api';
+import { motion, AnimatePresence } from 'framer-motion';
+import TypingIndicator from '../components/TypingIndicator';
 
 export default function QuizSession() {
   const { chapterId } = useParams();
@@ -49,7 +50,6 @@ export default function QuizSession() {
     const initSession = async () => {
       try {
         setLoading(true);
-        // If resuming a session for the same chapter, we don't need to fetch new questions
         if (sessionId && currentChapterId === chapterId && questions.length > 0 && currentIndex < questions.length) {
           setIsTyping(true);
           setTimeout(() => setIsTyping(false), 1500);
@@ -57,7 +57,6 @@ export default function QuizSession() {
           return;
         }
 
-        // Otherwise, start a new session
         const qRes = await quizApi.fetchQuestions(chapterId);
         if (qRes.data.length === 0) {
           setError("No questions available for this chapter.");
@@ -84,6 +83,11 @@ export default function QuizSession() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [isTyping, currentIndex, selectedOption]);
+
+  const handleOptionSelect = (optionId) => {
+    if (feedback) return;
+    setSelectedOption(optionId);
+  };
 
   const handleCheck = async () => {
     if (!selectedOption || !sessionId) return;
@@ -128,16 +132,14 @@ export default function QuizSession() {
   if (loading) return <div style={{ color: '#E9EDEF', padding: '20px' }}>Loading session...</div>;
   if (error) return <div style={{ color: '#F28B82', padding: '20px' }}>{error}</div>;
 
-  const currentQuestion = questions[currentIndex];
+  const currentQ = questions[currentIndex];
   
-  // To handle the chat UI, we will render previous questions and answers up to current index
   const pastChat = [];
   for (let i = 0; i <= currentIndex; i++) {
     const q = questions[i];
     const ansId = answers[q._id];
     const ansText = q.options.find(o => o.id === ansId)?.text;
 
-    // Show the question if it's past, or if it's current and typing is done
     if (i < currentIndex || (i === currentIndex && !isTyping)) {
       pastChat.push(
         <motion.div
@@ -145,9 +147,10 @@ export default function QuizSession() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
+            position: 'relative',
             alignSelf: 'flex-start',
             backgroundColor: '#202C33',
-            padding: '12px 16px',
+            padding: '20px 16px 12px 16px',
             borderRadius: '0 8px 8px 8px',
             color: '#E9EDEF',
             marginBottom: '10px',
@@ -156,13 +159,27 @@ export default function QuizSession() {
             lineHeight: '1.4'
           }}
         >
+          {q.difficulty && (
+            <span style={{
+              position: 'absolute',
+              top: '-8px',
+              left: '10px',
+              fontSize: '10px',
+              fontWeight: 'bold',
+              padding: '2px 8px',
+              borderRadius: '12px',
+              textTransform: 'uppercase',
+              backgroundColor: q.difficulty === 'hard' ? '#F28B82' : q.difficulty === 'medium' ? '#F4B400' : '#81C995',
+              color: '#0B141A'
+            }}>
+              {q.difficulty}
+            </span>
+          )}
           {q.question_text}
         </motion.div>
       );
     }
     
-    // Show the user's answer if it's a past question, or if they selected an option for the current one
-    // Actually, only show for past questions to keep the flow clean
     if (i < currentIndex && ansText) {
       pastChat.push(
         <motion.div
@@ -209,7 +226,6 @@ export default function QuizSession() {
         </div>
       </header>
 
-      {/* Progress Bar */}
       <div style={{ height: '3px', width: '100%', backgroundColor: '#202C33' }}>
         <div style={{ 
           height: '100%', 
@@ -220,30 +236,17 @@ export default function QuizSession() {
       </div>
 
       <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-        
         {pastChat}
-
+        
         <AnimatePresence>
           {isTyping && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              style={{
-                alignSelf: 'flex-start',
-                backgroundColor: '#202C33',
-                padding: '12px 16px',
-                borderRadius: '0 8px 8px 8px',
-                color: '#E9EDEF',
-                marginBottom: '15px',
-                fontSize: '14px',
-                display: 'flex',
-                gap: '4px'
-              }}
+              style={{ alignSelf: 'flex-start' }}
             >
-              <motion.span animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} style={{ width: 6, height: 6, backgroundColor: '#8696A0', borderRadius: '50%' }} />
-              <motion.span animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} style={{ width: 6, height: 6, backgroundColor: '#8696A0', borderRadius: '50%' }} />
-              <motion.span animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} style={{ width: 6, height: 6, backgroundColor: '#8696A0', borderRadius: '50%' }} />
+              <TypingIndicator />
             </motion.div>
           )}
         </AnimatePresence>
@@ -283,10 +286,12 @@ export default function QuizSession() {
               }
 
               return (
-                <button
+                <motion.button
                   key={option.id}
                   disabled={!!feedback}
                   onClick={() => setSelectedOption(option.id)}
+                  whileHover={!feedback ? { scale: 1.02 } : {}}
+                  whileTap={!feedback ? { scale: 0.98 } : {}}
                   style={{
                     padding: '15px',
                     borderRadius: '10px',
@@ -296,11 +301,12 @@ export default function QuizSession() {
                     textAlign: 'left',
                     fontSize: '15px',
                     transition: 'all 0.2s',
-                    opacity: (!feedback || option.id === feedback.correct_option_id || isSelected) ? 1 : 0.5
+                    opacity: (!feedback || option.id === feedback.correct_option_id || isSelected) ? 1 : 0.5,
+                    cursor: feedback ? 'default' : 'pointer'
                   }}
                 >
                   {option.text}
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -334,9 +340,11 @@ export default function QuizSession() {
             )}
           </AnimatePresence>
           
-          <button
+          <motion.button
             disabled={!selectedOption}
             onClick={feedback ? handleNext : handleCheck}
+            whileHover={selectedOption ? { scale: 1.02 } : {}}
+            whileTap={selectedOption ? { scale: 0.98 } : {}}
             style={{
               width: '100%',
               padding: '16px',
@@ -346,11 +354,13 @@ export default function QuizSession() {
               color: '#111B21',
               fontWeight: 'bold',
               fontSize: '16px',
-              opacity: selectedOption ? 1 : 0.5
+              opacity: selectedOption ? 1 : 0.5,
+              cursor: selectedOption ? 'pointer' : 'default',
+              border: 'none'
             }}
           >
             {!feedback ? "Submit" : (currentIndex < questions.length - 1 ? 'Next Question' : 'Complete Quiz')}
-          </button>
+          </motion.button>
         </motion.div>
       )}
     </div>

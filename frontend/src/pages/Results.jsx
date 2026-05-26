@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuizStore } from '../store/quizStore';
 import { motion } from 'framer-motion';
+import Confetti from 'react-confetti';
 
 export default function Results() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const { results, currentChapterId, resetQuiz } = useQuizStore();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
     if (!results) {
-      // If refreshed, navigate home since results are ephemeral in store, 
-      // though could be persisted. But let's route to home if not found.
       navigate('/');
+      return;
+    }
+    if (results.accuracy_percentage >= 80) {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 6000);
     }
   }, [results, navigate]);
 
@@ -47,11 +53,23 @@ export default function Results() {
       ? "Good effort! A little more practice and you'll nail it. 👍" 
       : "Don't give up! Review the topics and try again. 💪";
 
+  const isCelebration = results.accuracy_percentage >= 80;
+
   return (
     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+      {showConfetti && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          recycle={false}
+          numberOfPieces={350}
+          colors={['#00A884', '#25D366', '#F4B400', '#F28B82', '#81C995']}
+        />
+      )}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
         style={{
           backgroundColor: '#202C33',
           padding: '30px',
@@ -60,10 +78,32 @@ export default function Results() {
           width: '100%'
         }}
       >
-        <h1 style={{ color: '#00A884', fontSize: '28px', marginBottom: '10px' }}>Quiz Completed!</h1>
-        <div style={{ fontSize: '48px', fontWeight: 'bold', margin: '20px 0' }}>
+        <motion.h1
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          style={{ color: isCelebration ? '#25D366' : '#00A884', fontSize: '28px', marginBottom: '5px' }}
+        >
+          {isCelebration ? 'Quiz Complete 🎉' : 'Quiz Completed!'}
+        </motion.h1>
+        {isCelebration && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            style={{ color: '#25D366', fontSize: '13px', margin: '0 0 10px 0' }}
+          >
+            Outstanding score! You're on fire 🔥
+          </motion.p>
+        )}
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3, type: 'spring', stiffness: 150 }}
+          style={{ fontSize: '56px', fontWeight: 'bold', margin: '20px 0', color: isCelebration ? '#25D366' : '#E9EDEF' }}
+        >
           {results.score} / {results.total_questions}
-        </div>
+        </motion.div>
         
         <div style={{ fontSize: '14px', color: '#8696A0', marginBottom: '25px' }}>
           {motivationalMessage}
@@ -115,8 +155,10 @@ export default function Results() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <button
+          <motion.button
             onClick={handleRetry}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             style={{
               width: '100%',
               padding: '16px',
@@ -125,14 +167,17 @@ export default function Results() {
               border: '1px solid #00A884',
               color: '#00A884',
               fontWeight: 'bold',
-              fontSize: '16px'
+              fontSize: '16px',
+              cursor: 'pointer'
             }}
           >
             Retry Quiz
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={handleReturnHome}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             style={{
               width: '100%',
               padding: '16px',
@@ -140,11 +185,13 @@ export default function Results() {
               backgroundColor: '#00A884',
               color: '#111B21',
               fontWeight: 'bold',
-              fontSize: '16px'
+              fontSize: '16px',
+              cursor: 'pointer',
+              border: 'none'
             }}
           >
             Return to Dashboard
-          </button>
+          </motion.button>
         </div>
       </motion.div>
     </div>

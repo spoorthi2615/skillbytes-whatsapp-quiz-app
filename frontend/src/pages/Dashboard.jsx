@@ -23,10 +23,19 @@ export default function Dashboard() {
     loadExams();
   }, []);
 
+  const greetings = [
+    "Welcome back 👋",
+    "Ready for another challenge?",
+    "Let's continue your learning streak 🚀",
+    "Time to level up your skills 🧠",
+    "Welcome to SkillBytes!"
+  ];
+  const [greeting] = useState(() => greetings[Math.floor(Math.random() * greetings.length)]);
+
   return (
     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <header style={{ paddingBottom: '20px', borderBottom: '1px solid #202C33', marginBottom: '20px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>Quiz App</h1>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>{greeting}</h1>
         <p style={{ color: 'var(--wa-meta-text-dark)', fontSize: '14px' }}>Select an exam to begin</p>
       </header>
 
