@@ -6,9 +6,11 @@ A full-stack quiz application that delivers MCQs through a chat interface inspir
 
 ---
 
-<!-- Add a screenshot or demo GIF here -->
-<!-- ![App Demo](./docs/demo.gif) -->
-<!-- 📹 [Watch Loom Walkthrough](#) -->
+## 🎥 Demo Video
+
+Watch the full walkthrough and live project demo here:
+
+[▶ Watch Demo on Loom](https://www.loom.com/share/d6856747a1d848a78fabb14aea55b58b)
 
 ---
 
