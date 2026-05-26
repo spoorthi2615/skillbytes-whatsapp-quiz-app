@@ -93,10 +93,10 @@ export default function QuizSession() {
     if (!selectedOption || !sessionId) return;
     try {
       const durationMs = Date.now() - startTime;
-      const currentQ = questions[currentIndex];
+      const currentQuestion = questions[currentIndex];
       
-      const res = await quizApi.submitAnswer(sessionId, currentQ._id, selectedOption, durationMs);
-      submitAnswer(currentQ._id, selectedOption);
+      const res = await quizApi.submitAnswer(sessionId, currentQuestion._id, selectedOption, durationMs);
+      submitAnswer(currentQuestion._id, selectedOption);
       setFeedback({
         is_correct: res.data.is_correct,
         correct_option_id: res.data.correct_option_id,
@@ -131,8 +131,11 @@ export default function QuizSession() {
 
   if (loading) return <div style={{ color: '#E9EDEF', padding: '20px' }}>Loading session...</div>;
   if (error) return <div style={{ color: '#F28B82', padding: '20px' }}>{error}</div>;
+  if (!questions || questions.length === 0 || currentIndex >= questions.length) {
+    return <div style={{ color: '#E9EDEF', padding: '20px', textAlign: 'center' }}>Loading question...</div>;
+  }
 
-  const currentQ = questions[currentIndex];
+  const currentQuestion = questions[currentIndex];
   
   const pastChat = [];
   for (let i = 0; i <= currentIndex; i++) {
