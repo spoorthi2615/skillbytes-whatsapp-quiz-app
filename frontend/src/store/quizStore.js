@@ -60,7 +60,7 @@ export const useQuizStore = create(
     {
       name: 'quiz-storage',
       partialize: (state) => ({
-        userId: state.userId,
+        userId: state.userId,        // persisted so the same user keeps the same ID across sessions
         sessionId: state.sessionId,
         currentChapterId: state.currentChapterId,
         questions: state.questions,

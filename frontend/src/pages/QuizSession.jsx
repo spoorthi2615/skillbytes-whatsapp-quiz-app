@@ -292,7 +292,7 @@ export default function QuizSession() {
                 <motion.button
                   key={option.id}
                   disabled={!!feedback}
-                  onClick={() => setSelectedOption(option.id)}
+                  onClick={() => handleOptionSelect(option.id)}
                   whileHover={!feedback ? { scale: 1.02 } : {}}
                   whileTap={!feedback ? { scale: 0.98 } : {}}
                   style={{
