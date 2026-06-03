@@ -25,4 +25,23 @@ class GeneratedContentRepository(BaseRepository):
     async def get_by_id(self, content_id: str) -> Optional[Dict[str, Any]]:
         return await self.collection.find_one({"_id": content_id})
 
+    async def get_latest_version(self, user_id: str, asset_id: str, content_type: str) -> Optional[Dict[str, Any]]:
+        cursor = self.collection.find({
+            "user_id": user_id,
+            "asset_id": asset_id,
+            "content_type": content_type
+        }).sort("version", -1)
+        res = await cursor.to_list(length=1)
+        return res[0] if res else None
+
+    async def get_version_history(self, user_id: str, parent_content_id: str) -> List[Dict[str, Any]]:
+        cursor = self.collection.find({
+            "user_id": user_id,
+            "$or": [
+                {"_id": parent_content_id},
+                {"parent_content_id": parent_content_id}
+            ]
+        }).sort("version", 1)
+        return await cursor.to_list(length=None)
+
 generated_content_repo = GeneratedContentRepository()

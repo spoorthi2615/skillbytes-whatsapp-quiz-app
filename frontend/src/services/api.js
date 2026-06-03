@@ -184,4 +184,45 @@ export const preferencesApi = {
   update: (data) => api.put('/api/preferences', data).then(r => r.data),
 };
 
+// ---- Assets API (Phase 2A) ----
+export const assetsApi = {
+  upload: (formData, onUploadProgress) =>
+    api.post('/api/assets/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress
+    }).then(r => r.data),
+  list: () => api.get('/api/assets').then(r => r.data),
+  delete: (id) => api.delete(`/api/assets/${id}`).then(r => r.data),
+};
+
+// ---- Jobs API (Phase 2A) ----
+export const jobsApi = {
+  trigger: (data) => api.post('/api/jobs', data).then(r => r.data),
+  getStatus: (id) => api.get(`/api/jobs/${id}`).then(r => r.data),
+  list: () => api.get('/api/jobs').then(r => r.data),
+};
+
+// ---- Content API (Phase 2A) ----
+export const contentApi = {
+  list: (type = '') => api.get(type ? `/api/content?content_type=${type}` : '/api/content').then(r => r.data),
+  get: (id) => api.get(`/api/content/${id}`).then(r => r.data),
+  delete: (id) => api.delete(`/api/content/${id}`).then(r => r.data),
+  submitFeedback: (id, rating, feedback) => api.post(`/api/content/${id}/feedback`, { rating, feedback }).then(r => r.data),
+  getHistory: (id) => api.get(`/api/content/${id}/history`).then(r => r.data),
+  restoreVersion: (id) => api.post(`/api/content/${id}/restore`).then(r => r.data),
+  getChunk: (id) => api.get(`/api/content/chunks/${id}`).then(r => r.data),
+};
+
+// ---- Favorites API (Phase 2A) ----
+export const favoritesApi = {
+  list: () => api.get('/api/favorites').then(r => r.data),
+  add: (data) => api.post('/api/favorites', data).then(r => r.data),
+  remove: (contentId) => api.delete(`/api/favorites/${contentId}`).then(r => r.data),
+};
+
+// ---- Session API (Phase 2A) ----
+export const sessionApi = {
+  log: (data) => api.post('/api/learning-sessions', data).then(r => r.data),
+};
+
 export default api;

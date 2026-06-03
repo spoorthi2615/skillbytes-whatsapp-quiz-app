@@ -15,6 +15,8 @@ const ExamSelection = lazy(() => import('./pages/ExamSelection'));
 const QuizSession = lazy(() => import('./pages/QuizSession'));
 const Results = lazy(() => import('./pages/Results'));
 const Analytics = lazy(() => import('./pages/Analytics'));
+const UploadMaterial = lazy(() => import('./pages/UploadMaterial'));
+const GeneratedContent = lazy(() => import('./pages/GeneratedContent'));
 
 // Sprint 2+ pages — gracefully fall back if not yet implemented
 const Profile = lazy(() =>
@@ -139,6 +141,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProtectedLayout><Analytics /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><UploadMaterial /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/generated-content"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><GeneratedContent /></ProtectedLayout>
               </ProtectedRoute>
             }
           />

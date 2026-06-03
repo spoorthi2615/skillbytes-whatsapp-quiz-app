@@ -18,6 +18,8 @@ logger.add("logs/quiz_app.log", rotation="500 MB", level="INFO")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting up Quiz Application API")
+    import os
+    os.makedirs(settings.upload_dir, exist_ok=True)
     await connect_to_mongo()
     yield
     logger.info("Shutting down Quiz Application API")

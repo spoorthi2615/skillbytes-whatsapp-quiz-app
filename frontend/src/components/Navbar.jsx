@@ -4,10 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
 import { authApi, notificationApi } from '../services/api';
 import toast from 'react-hot-toast';
-import { LayoutDashboard, BookOpen, History, Trophy, LogOut, User, ChevronDown, Zap, Bell } from 'lucide-react';
+import { LayoutDashboard, BookOpen, History, Trophy, LogOut, User, ChevronDown, Zap, Bell, UploadCloud, Sparkles } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboard },
+  { label: 'Upload Material', path: '/upload', icon: UploadCloud },
+  { label: 'Study Aids', path: '/generated-content', icon: Sparkles },
   { label: 'Tracks', path: '/tracks', icon: BookOpen },
   { label: 'History', path: '/history', icon: History },
   { label: 'Achievements', path: '/achievements', icon: Trophy },

@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 60
     jwt_refresh_token_expire_days: int = 7
+    gemini_api_key: str = ""
+    upload_dir: str = "uploads"
+    max_upload_size: int = 26214400  # 25 MB
 
     class Config:
         env_file = ".env"

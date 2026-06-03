@@ -15,6 +15,9 @@ from app.routes.recommendation_routes import router as recommendation_router
 from app.routes.challenge_routes import router as challenge_router
 from app.routes.asset_routes import router as asset_router
 from app.routes.ai_job_routes import router as ai_job_router
+from app.routes.content_routes import router as content_router
+from app.routes.favorites_routes import router as favorites_router
+from app.routes.session_routes import router as session_router
 
 router = APIRouter()
 router.include_router(auth_router)
@@ -29,6 +32,9 @@ router.include_router(recommendation_router)
 router.include_router(challenge_router)
 router.include_router(asset_router)
 router.include_router(ai_job_router)
+router.include_router(content_router)
+router.include_router(favorites_router)
+router.include_router(session_router)
 
 def success_response(data):
     return {"success": True, "data": data}

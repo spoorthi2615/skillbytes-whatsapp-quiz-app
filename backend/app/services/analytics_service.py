@@ -94,6 +94,17 @@ class AnalyticsService:
 
         avg_questions_per_session = (questions_answered / total_sessions) if total_sessions > 0 else 0
 
+        # Phase 2A Additions Analytics
+        from app.repositories.asset_repo import asset_repo
+        from app.repositories.content_repo import generated_content_repo
+        from app.repositories.session_repo import session_repo as ls_repo
+        
+        c_match = {"user_id": user_id} if user_id else {}
+        uploads_count = await asset_repo.collection.count_documents({"status": {"$ne": "deleted"}, **c_match})
+        gen_content_count = await generated_content_repo.collection.count_documents(c_match)
+        flashcards_studied = await ls_repo.collection.count_documents({"content_type": "flashcards", "action": "study", **c_match})
+        summaries_read = await ls_repo.collection.count_documents({"content_type": "summary", "action": "view", **c_match})
+
         return {
             "daily_active_users": dau,
             "weekly_active_users": wau,
@@ -105,5 +116,9 @@ class AnalyticsService:
             "total_attempts": total_sessions,
             "avg_questions_per_session": avg_questions_per_session,
             "drop_off_data": dropoff_data,
-            "peak_hours_data": full_peak_hours
+            "peak_hours_data": full_peak_hours,
+            "uploads_count": uploads_count,
+            "generated_content_count": gen_content_count,
+            "flashcards_studied": flashcards_studied,
+            "summaries_read": summaries_read
         }
