@@ -4,8 +4,8 @@
 [![Tech Stack](https://img.shields.io/badge/Stack-React%20%7C%20FastAPI%20%7C%20MongoDB-blue.svg)](#)
 [![Security](https://img.shields.io/badge/Security-JWT%20%7C%20Bcrypt-orange.svg)](#)
 
-**Version:** v1.0  
-**Status:** Stable Release
+**Version:** v2.0-alpha  
+**Status:** Stable Release (Phase 2A Complete)
 
 A full-stack gamified quiz application that delivers MCQs through an interactive chat interface inspired by WhatsApp. Features secure JWT user authentication, profile customization, a gamification system (XP, levels, streaks, achievements), daily challenges, personalized learning tracks, and a real-time analytics dashboard.
 
