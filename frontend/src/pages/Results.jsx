@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuizStore } from '../store/quizStore';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
 
 export default function Results() {
-  const { sessionId } = useParams();
   const navigate = useNavigate();
   const { results, currentChapterId, resetQuiz } = useQuizStore();
   const [showConfetti, setShowConfetti] = useState(false);
@@ -17,8 +16,14 @@ export default function Results() {
       return;
     }
     if (results.accuracy_percentage >= 80) {
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 6000);
+      const timer = setTimeout(() => {
+        setShowConfetti(true);
+      }, 50);
+      const clearTimer = setTimeout(() => setShowConfetti(false), 6050);
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(clearTimer);
+      };
     }
   }, [results, navigate]);
 

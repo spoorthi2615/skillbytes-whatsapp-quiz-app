@@ -75,3 +75,82 @@ class QuizResultResponse(BaseModel):
     accuracy_percentage: float
     correct_answers: int
     incorrect_answers: int
+
+# ── Auth Schemas ──────────────────────────────────────────────
+
+class RegisterRequest(BaseModel):
+    name: str
+    username: str
+    email: str
+    password: str
+    college: str = ""
+    branch: str = ""
+    year: str = ""
+    preferred_language: str = "Python"
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+class VerifyEmailRequest(BaseModel):
+    token: str
+
+class ResendVerificationRequest(BaseModel):
+    email: str
+
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    username: str
+    email: str
+    college: str
+    branch: str
+    year: str
+    preferred_language: str
+    role: str
+    xp: int
+    level: int
+    streak: int
+    email_verified: bool
+    is_active: bool
+    created_at: datetime
+
+# ── Profile & Preferences Schemas ────────────────────────────
+
+class UpdateProfileRequest(BaseModel):
+    name: Optional[str] = None
+    college: Optional[str] = None
+    branch: Optional[str] = None
+    year: Optional[str] = None
+    preferred_language: Optional[str] = None
+
+class PublicProfileResponse(BaseModel):
+    username: str
+    name: str
+    level: int
+    xp: int
+    streak: int
+    college: str
+    branch: str
+    role: str
+    created_at: str
+
+class UserPreferencesResponse(BaseModel):
+    preferred_language: str
+    theme: str
+    notifications_enabled: bool
+    selected_tracks: List[str]
+
+class UpdatePreferencesRequest(BaseModel):
+    preferred_language: Optional[str] = None
+    theme: Optional[str] = None
+    notifications_enabled: Optional[bool] = None
+    selected_tracks: Optional[List[str]] = None

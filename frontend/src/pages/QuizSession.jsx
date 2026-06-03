@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuizStore } from '../store/quizStore';
 import { quizApi } from '../services/api';
@@ -11,7 +11,7 @@ export default function QuizSession() {
   
   const { 
     userId, sessionId, currentChapterId, questions, currentIndex, answers,
-    setSession, submitAnswer, nextQuestion, completeQuiz, resetQuiz 
+    setSession, submitAnswer, nextQuestion, completeQuiz 
   } = useQuizStore();
 
   const [isTyping, setIsTyping] = useState(false);
@@ -20,7 +20,7 @@ export default function QuizSession() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [feedback, setFeedback] = useState(null);
   
-  const [startTime, setStartTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(() => Date.now());
   const [globalTime, setGlobalTime] = useState(0);
   const [questionTime, setQuestionTime] = useState(0);
   const chatEndRef = useRef(null);
@@ -70,6 +70,7 @@ export default function QuizSession() {
         setIsTyping(true);
         setTimeout(() => setIsTyping(false), 1500);
       } catch (err) {
+        console.error('Failed to start quiz session:', err);
         setError('Failed to start quiz session.');
       } finally {
         setLoading(false);
@@ -77,7 +78,8 @@ export default function QuizSession() {
     };
 
     initSession();
-  }, [chapterId, userId, sessionId, currentChapterId, questions.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chapterId, userId, sessionId, currentChapterId, questions.length, setSession]);
 
   // Auto scroll to bottom
   useEffect(() => {
@@ -103,6 +105,7 @@ export default function QuizSession() {
         explanation: res.data.explanation
       });
     } catch (err) {
+      console.error("Failed to submit answer:", err);
       setError("Failed to submit answer.");
     }
   };
@@ -124,6 +127,7 @@ export default function QuizSession() {
         completeQuiz(res.data);
         navigate(`/results/${sessionId}`);
       } catch (err) {
+        console.error("Failed to complete quiz:", err);
         setError("Failed to complete quiz.");
       }
     }

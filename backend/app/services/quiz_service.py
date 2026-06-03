@@ -110,6 +110,41 @@ class QuizService:
         events = await event_repo.get_all({"session_id": session_id, "event_type": "question_answered"})
         total_duration = sum(e.get("duration_ms", 0) for e in events if e.get("duration_ms"))
         avg_response_time = (total_duration / len(events)) if events else 0
+        
+        # SPRINT 3 HOOK: Give XP and Achievements if user is authenticated
+        if session.get("user_id"):
+            user_id = session["user_id"]
+            
+            # 1. Update streak
+            from app.services.streak_service import StreakService
+            await StreakService.update_streak(user_id)
+            
+            # 2. Award XP
+            from app.services.xp_service import XPService
+            xp_earned = session["score"] * 10
+            if xp_earned > 0:
+                await XPService.award_xp(user_id, xp_earned, "Quiz Completed", session["_id"])
+            
+            # 3. Check achievements
+            from app.services.achievement_service import AchievementService
+            await AchievementService.check_and_unlock(user_id, "first_quiz")
+            if session["score"] == session["total_questions"] and session["score"] > 0:
+                await AchievementService.check_and_unlock(user_id, "perfect_score")
+
+            # 4. Log to history
+            from app.repositories.history_repo import history_repo
+            from app.repositories.quiz_repo import chapter_repo
+            chapter = await chapter_repo.get_by_id(session.get("chapter_id"))
+            chapter_name = chapter.get("name") if chapter else "Quiz"
+            await history_repo.add_history_entry(
+                user_id=user_id,
+                action=f"Completed Quiz: {chapter_name}",
+                details={
+                    "score": f"{score}/{total}",
+                    "accuracy": accuracy,
+                    "session_id": session_id
+                }
+            )
 
         return {
             "score": score,

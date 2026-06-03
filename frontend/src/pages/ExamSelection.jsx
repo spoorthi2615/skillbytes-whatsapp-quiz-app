@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { quizApi } from '../services/api';
 import { useQuizStore } from '../store/quizStore';
@@ -38,6 +38,7 @@ export default function ExamSelection() {
         }
         setChapters(chaps);
       } catch (err) {
+        console.error("Failed to load subjects and chapters", err);
         setError('Failed to load subjects and chapters.');
       } finally {
         setLoading(false);

@@ -3,8 +3,32 @@ from app.services.exam_service import ExamService
 from app.services.quiz_service import QuizService
 from app.services.analytics_service import AnalyticsService
 from app.schemas.domain import StartQuizRequest, AnswerRequest
+from app.routes.auth_routes import router as auth_router
+from app.routes.profile_routes import router as profile_router
+from app.routes.preferences_routes import router as preferences_router
+from app.routes.xp_routes import router as xp_router
+from app.routes.achievement_routes import router as achievement_router
+from app.routes.notification_routes import router as notification_router
+from app.routes.track_routes import router as track_router
+from app.routes.history_routes import router as history_router
+from app.routes.recommendation_routes import router as recommendation_router
+from app.routes.challenge_routes import router as challenge_router
+from app.routes.asset_routes import router as asset_router
+from app.routes.ai_job_routes import router as ai_job_router
 
 router = APIRouter()
+router.include_router(auth_router)
+router.include_router(profile_router)
+router.include_router(preferences_router)
+router.include_router(xp_router)
+router.include_router(achievement_router)
+router.include_router(notification_router)
+router.include_router(track_router)
+router.include_router(history_router)
+router.include_router(recommendation_router)
+router.include_router(challenge_router)
+router.include_router(asset_router)
+router.include_router(ai_job_router)
 
 def success_response(data):
     return {"success": True, "data": data}
@@ -27,7 +51,6 @@ async def get_chapters(subject_id: str):
 @router.get("/chapters/{chapter_id}/questions")
 async def get_questions(chapter_id: str):
     questions = await ExamService.get_questions_by_chapter(chapter_id)
-    # Remove correct_option_id and explanation to not leak answers
     for q in questions:
         q.pop("correct_option_id", None)
         q.pop("explanation", None)
@@ -55,6 +78,6 @@ async def complete_quiz(session_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/analytics/dashboard")
-async def get_analytics():
-    metrics = await AnalyticsService.get_dashboard_metrics()
+async def get_analytics(user_id: str = None):
+    metrics = await AnalyticsService.get_dashboard_metrics(user_id)
     return success_response(metrics)

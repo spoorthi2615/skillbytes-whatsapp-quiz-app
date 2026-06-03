@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { quizApi } from '../services/api';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area, CartesianGrid } from 'recharts';
 import { useQuizStore } from '../store/quizStore';
 
@@ -23,7 +23,7 @@ export default function Analytics() {
         const res = await quizApi.fetchAnalytics(view === 'personal' ? userId : null);
         setMetrics(res.data);
       } catch (err) {
-        console.error("Failed to load analytics");
+        console.error("Failed to load analytics", err);
       } finally {
         setLoading(false);
       }

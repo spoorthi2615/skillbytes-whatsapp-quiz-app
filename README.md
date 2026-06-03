@@ -1,8 +1,15 @@
 # SkillBytes — WhatsApp-Style Quiz Platform
 
-A full-stack quiz application that delivers MCQs through a chat interface inspired by WhatsApp. Built with React, FastAPI, and MongoDB — with a real-time analytics dashboard and session persistence.
+[![Phase 1 Complete](https://img.shields.io/badge/Phase%201-Complete-brightgreen.svg)](#)
+[![Tech Stack](https://img.shields.io/badge/Stack-React%20%7C%20FastAPI%20%7C%20MongoDB-blue.svg)](#)
+[![Security](https://img.shields.io/badge/Security-JWT%20%7C%20Bcrypt-orange.svg)](#)
 
-> Take a quiz, get instant feedback, and track your progress over time.
+**Version:** v1.0  
+**Status:** Stable Release
+
+A full-stack gamified quiz application that delivers MCQs through an interactive chat interface inspired by WhatsApp. Features secure JWT user authentication, profile customization, a gamification system (XP, levels, streaks, achievements), daily challenges, personalized learning tracks, and a real-time analytics dashboard.
+
+> Take a quiz, get instant feedback, unlock achievements, climb levels, and track your metrics.
 
 ---
 
@@ -14,22 +21,40 @@ Watch the full walkthrough and live project demo here:
 
 ---
 
-## Features
+## 🚀 Features (Phase 1 Finalized)
 
-- **Chat-style quiz flow** — questions arrive as animated chat bubbles with a typing indicator between transitions
-- **Instant answer feedback** — correct/wrong highlighted immediately with a clear explanation
-- **Difficulty badges** — each question is tagged Easy, Medium, or Hard
-- **Randomized quizzes** — questions are randomly sampled from a pool; answer options are shuffled each time
-- **Per-question timers** — a live stopwatch tracks how long each question takes
-- **Progress bar** — smooth animated progress indicator across the top
-- **Session persistence** — refresh the page mid-quiz and it resumes exactly where you left off (via localStorage)
-- **Results screen** — score breakdown with accuracy, time spent, and motivational message; confetti fires for scores ≥ 80%
-- **Analytics dashboard** — personal and global stats powered by MongoDB aggregation pipelines
-- **Docker support** — spin up the entire stack with a single command
+### 1. Chat-Style Quiz Flow
+- **WhatsApp UI Experience** — MCQ questions are rendered as animated chat bubbles with a realistic typing indicator.
+- **Per-Question Timer** — Live stopwatch tracking responses to calculate average solving speeds.
+- **Difficulty Badges** — Instant feedback with difficulty classification (Easy, Medium, Hard).
+- **Celebration Confetti** — Interactive confetti trigger on scoring 80% or higher.
+- **Session Resume** — State persisted via Zustand; quiz sessions survive page refreshes.
+
+### 2. Authentication & Authorization Foundation
+- **JWT Authorization** — Secure route protection using access tokens (short-lived) and rotation-based refresh tokens (stored securely).
+- **Password Protection** — High-performance password hashing via the direct `bcrypt` library (fully compatible with Python 3.13).
+- **Role-Based Access Control (RBAC)** — Backend dependencies distinguishing `student`, `faculty`, and `admin` roles.
+- **Email Verification** — Signup token verification mechanism.
+
+### 3. Profile & Preferences System
+- **Custom Profiles** — Manage name, college, year, department/branch, and preferred coding language.
+- **Preferences Panel** — Toggle push notifications and manage account preferences directly.
+- **Public Handles** — Access and share public profile summaries under `/u/{username}`.
+
+### 4. Gamification Engine
+- **XP & Levels** — Earn experience points for answers and quiz completions. Dynamic level calculations based on cumulative XP (Levels 1–10).
+- **Daily Active Streaks** — Visual calendar streak counter tracking consecutive days of quiz activity.
+- **Unlockable Achievements** — Award system checking conditions like "First Quiz Completed" or "Perfect Score (100% Accuracy)".
+- **In-App Notifications** — Receive notifications immediately on leveling up, updating streaks, or unlocking achievements.
+
+### 5. Learning Tracks & Content Discovery
+- **Personalized Recommendations** — Smart widgets pointing students to weak chapters and trending topics.
+- **Structured Tracks** — Browse 4 learning paths: *Placement Prep*, *Full-Stack Development*, *AI & Machine Learning*, and *Cybersecurity*.
+- **Daily Challenges** — Specialized, high-reward daily challenges matched to the current calendar date.
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 React + Vite  ──(Axios)──►  FastAPI  ──(Motor)──►  MongoDB
@@ -38,91 +63,60 @@ React + Vite  ──(Axios)──►  FastAPI  ──(Motor)──►  MongoDB
   (state + localStorage)   (rate limiting / logging)
 ```
 
-The frontend is a React SPA built with Vite. State is managed by Zustand with a persist middleware so quiz progress survives a page refresh. API calls go to a FastAPI backend that follows a service-repository pattern — routes handle HTTP, services contain business logic, and repositories abstract the database layer. MongoDB stores everything from quiz sessions to granular answer events, which power the analytics.
+The application uses an asynchronous REST API architecture built with **FastAPI** and **MongoDB**. Data exchanges are secured with JWT bearer tokens. The backend implements a robust **Service-Repository** pattern for separation of concerns, and the frontend is built using **Vite + React** with global store management powered by **Zustand**.
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
-| Library | Purpose |
-|---|---|
-| React 18 + Vite | UI framework + dev server |
-| React Router | Page routing |
-| Zustand | State management with localStorage persistence |
-| Framer Motion | Chat bubble animations, hover/tap micro-interactions |
-| Recharts | Analytics charts (Area, Bar, Pie) |
-| react-hot-toast | Global API error notifications |
-| react-confetti | Celebration on high scores |
+- **React 19 + Vite** — High-speed dev server and UI component rendering.
+- **React Router 7** — Declared page navigation and route redirects.
+- **Zustand** — Central store managing authentication, theme preferences, and quiz progress.
+- **Framer Motion** — Dynamic animations for message bubbles and transitions.
+- **Recharts** — Data charts mapping daily analytics and drop-off analysis.
 
 ### Backend
-| Library | Purpose |
-|---|---|
-| FastAPI | Async REST API framework |
-| Motor | Async MongoDB driver |
-| Pydantic | Request/response validation |
-| slowapi | Rate limiting |
-| loguru | Structured logging |
-
-### Database
-- **MongoDB** — document store for quizzes, sessions, and analytics events
-
-### DevOps
-- **Docker + Docker Compose** — containerized multi-service setup
+- **FastAPI** — Async web framework for high-throughput routing.
+- **Motor** — Asynchronous MongoDB driver.
+- **Bcrypt** — Cryptographic password hashing.
+- **PyJWT / Python-Jose** — Secure JSON Web Token encoding/decoding.
+- **slowapi** — Rate-limiting middleware.
+- **loguru** — Standardized application logging.
 
 ---
 
-## Dataset & Quiz System
+## 💾 Database Collections & Schema
 
-The seed script generates a realistic content hierarchy:
+MongoDB indexes are automatically verified and built on application startup.
 
-```
-3 Exams (e.g. Software Engineering, Data Science, Cloud & DevOps)
-  └── 9 Subjects
-        └── 27 Chapters
-              └── 279+ Questions  (8–12 per chapter)
-```
-
-Each question has a difficulty tag (`easy`, `medium`, `hard`) and a written explanation for the correct answer.
-
-**Randomization:** The backend uses MongoDB's `$sample` to pick 5 random questions per quiz session. The answer options are then shuffled in Python before being sent to the client — so the correct answer won't always be in the same position.
-
----
-
-## Analytics
-
-The dashboard tracks 9 metrics using MongoDB aggregation pipelines:
-
-| Metric | How It Works |
-|---|---|
-| Daily Active Users | Unique `user_id`s with a session `started_at` >= today |
-| Weekly Active Users | Same, but over the past 7 days |
-| Questions Served | Sum of `total_questions` across all sessions |
-| Questions Answered | Count of `question_answered` events |
-| Avg Response Time | `$avg` on `duration_ms` in the events collection |
-| Completion Rate | Completed sessions / total sessions × 100 |
-| Drop-off Analysis | Groups abandoned sessions by `current_question_index` |
-| Peak Activity Hours | Extracts `$hour` from `started_at`, grouped into 24 buckets |
-| Avg Questions/Session | Questions answered ÷ total sessions |
-
-The dashboard has two views — **Your Stats** (filtered by anonymous user ID) and **Global Stats** (all users).
+| Collection | Key Fields | Purpose |
+|---|---|---|
+| `users` | `_id`, `email` (unique), `username` (unique), `password_hash`, `xp`, `level`, `streak` | Student profiles and auth accounts |
+| `refresh_tokens` | `_id`, `token` (unique), `user_id`, `expires_at` | Active sessions and rotation tracking |
+| `learning_tracks` | `_id`, `title`, `description`, `modules` | Curriculum layout and learning paths |
+| `exams` / `subjects` / `chapters` | Academic structural details mapping chapters to exams |
+| `questions` | `_id`, `question_text`, `options`, `correct_option_id`, `difficulty` | MCQ database |
+| `daily_challenges` | `_id`, `date_str`, `title`, `description`, `xp_reward` | Calendar challenges |
+| `user_achievements` | `_id`, `user_id`, `achievement_id`, `unlocked_at` | Gamification tracking |
+| `notifications` | `_id`, `user_id`, `message`, `is_read`, `created_at` | User alerts |
 
 ---
 
-## Getting Started
+## 🏁 Getting Started
 
 ### Prerequisites
 - Node.js 18+
 - Python 3.10+
-- MongoDB running locally (`localhost:27017`)
+- MongoDB running locally (`mongodb://localhost:27017`)
 
-### 1. Clone the repo
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/spoorthi2615/skillbytes-whatsapp-quiz-app.git
 cd skillbytes-whatsapp-quiz-app
 ```
 
-### 2. Backend setup
+### 2. Backend Setup
 ```bash
 cd backend
 python -m venv venv
@@ -135,112 +129,90 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside `backend/`:
+Create a `.env` file in the `backend/` directory:
 ```env
 MONGODB_URL=mongodb://localhost:27017
 DATABASE_NAME=skillbytes_db
-PROJECT_NAME=SkillBytes API
+JWT_SECRET_KEY=changeme-use-a-real-secret-in-production
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=60
+JWT_REFRESH_TOKEN_EXPIRE_DAYS=7
 ```
 
-Seed the database:
+Seed the database collections, curriculums, and admin student account:
 ```bash
+# Seed curriculums, tracks, and challenges
+.\venv\Scripts\python -m app.scripts.seed_tracks
+
+# Seed a default student login account (student@test.com / Test@123)
+.\venv\Scripts\python -m app.scripts.seed_admin
+
+# Seed general questions (optional)
 .\venv\Scripts\python -m app.scripts.seed
-# Inserted 279 unique questions across 27 chapters.
 ```
 
-Start the server:
+Start the FastAPI server:
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 3. Frontend setup
+### 3. Frontend Setup
 ```bash
-cd frontend
+cd ../frontend
 npm install
 ```
 
-Create a `.env` file inside `frontend/`:
+Create a `.env` file in the `frontend/` directory:
 ```env
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
-Start the dev server:
+Start the Vite development server:
 ```bash
 npm run dev
-# Runs at http://localhost:5173
-```
-
-### 4. Docker (optional)
-To run the full stack with Docker:
-```bash
-docker-compose up --build
-```
-
-- Frontend → `http://localhost:3000`
-- Backend → `http://localhost:8000`
-- MongoDB → `localhost:27017`
-
----
-
-## Project Structure
-
-```
-skillbytes/
-├── frontend/
-│   ├── src/
-│   │   ├── components/      # TypingIndicator and shared UI
-│   │   ├── pages/           # Dashboard, QuizSession, Results, Analytics
-│   │   ├── services/        # api.js — Axios setup with interceptors
-│   │   ├── store/           # quizStore.js — Zustand with persist
-│   │   └── App.jsx          # Routes + lazy loading + Toaster
-│   ├── .env
-│   └── package.json
-│
-├── backend/
-│   ├── app/
-│   │   ├── core/            # DB connection, config
-│   │   ├── middleware/      # Rate limiter
-│   │   ├── repositories/    # DB abstraction layer
-│   │   ├── routes/          # API endpoints
-│   │   ├── schemas/         # Pydantic models
-│   │   ├── scripts/         # seed.py
-│   │   ├── services/        # Business logic + analytics aggregations
-│   │   └── main.py
-│   ├── .env
-│   └── requirements.txt
-│
-├── docker-compose.yml
-└── README.md
+# Running at http://localhost:5173
 ```
 
 ---
 
-## API Endpoints
+## 🔌 API Endpoints
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/exams` | List all exams |
-| `GET` | `/api/exams/{id}/subjects` | Subjects for an exam |
-| `GET` | `/api/subjects/{id}/chapters` | Chapters for a subject |
-| `GET` | `/api/chapters/{id}/questions` | 5 randomized questions |
-| `POST` | `/api/quiz/start` | Create a new quiz session |
-| `POST` | `/api/quiz/{id}/answer` | Submit an answer and record the event |
-| `POST` | `/api/quiz/{id}/complete` | Mark session complete, return results |
-| `GET` | `/api/analytics/dashboard` | Full analytics payload |
-| `GET` | `/health` | Health check |
+### 🔐 Authentication
+- `POST` `/api/auth/register` — Create a student account.
+- `POST` `/api/auth/login` — Sign in and get JWT tokens.
+- `POST` `/api/auth/logout` — Revoke and clean refresh tokens.
+- `POST` `/api/auth/refresh` — Rotate access and refresh tokens.
+- `GET` `/api/auth/me` — Retrieve current authenticated user object.
+
+### 👤 Profiles & Customization
+- `GET` `/api/profile` — Fetch custom profile.
+- `PUT` `/api/profile` — Update details (name, college, year, branch, language).
+- `GET` `/api/u/{username}` — Public profile page (unauthenticated).
+- `GET` `/api/preferences` — Get notification toggles.
+- `PUT` `/api/preferences` — Save notification toggles.
+
+### 📚 Learning Layer
+- `GET` `/api/tracks` — Retrieve all learning tracks.
+- `GET` `/api/daily-challenge` — Fetch challenge for the current date.
+- `GET` `/api/recommendations` — Fetch weak topic recommendations.
+- `GET` `/api/history` — Fetch student quiz completion history.
+
+### 🏆 Gamification
+- `GET` `/api/achievements/mine` — Retrieve unlocked achievements.
+- `GET` `/api/notifications` — Fetch recent in-app user notifications.
+- `PUT` `/api/notifications/read` — Mark notifications as read.
 
 ---
 
-## Things I'd Add Next
+## 🔮 Things I'd Add in Phase 2
 
-- **Redis caching** for the exam/subject/chapter lists (they don't change often, no need to hit MongoDB every time)
-- **WebSocket connection** for the quiz session — would make the chat feel more real-time
-- **Proper user accounts** with JWT auth, if this were going to production
-- **CI/CD pipeline** with GitHub Actions for automated testing and deployment
-- **Deployment** — the Docker setup makes it straightforward to host on a VPS (Railway, Render, or DigitalOcean)
+- **Redis Caching** — Cache exam lists and recommendations to speed up requests.
+- **WebSockets** — Transition quiz session queries from HTTP polling to WebSockets.
+- **CI/CD Pipeline** — Set up GitHub Actions for testing and lint verification on pull requests.
+- **AI Recommendation Engine** — Use machine learning to analyze history and auto-suggest chapters.
 
 ---
 
-## License
+## 📄 License
 
 MIT License © [Spoorthi](https://github.com/spoorthi2615)
