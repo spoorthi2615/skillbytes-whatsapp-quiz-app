@@ -18,6 +18,13 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const UploadMaterial = lazy(() => import('./pages/UploadMaterial'));
 const GeneratedContent = lazy(() => import('./pages/GeneratedContent'));
 
+// Phase 2B Assessment Engine pages
+const Assessments = lazy(() => import('./pages/Assessments'));
+const AssessmentPlayer = lazy(() => import('./pages/AssessmentPlayer'));
+const AssessmentResults = lazy(() => import('./pages/AssessmentResults'));
+const InterviewQuestions = lazy(() => import('./pages/InterviewQuestions'));
+const CodingQuestions = lazy(() => import('./pages/CodingQuestions'));
+
 // Sprint 2+ pages — gracefully fall back if not yet implemented
 const Profile = lazy(() =>
   import('./pages/Profile').catch(() => ({
@@ -157,6 +164,46 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProtectedLayout><GeneratedContent /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/assessments"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><Assessments /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/assessment/:id"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><AssessmentPlayer /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/assessment/:id/results"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><AssessmentResults /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview-prep"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><InterviewQuestions /></ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/coding-challenges"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout><CodingQuestions /></ProtectedLayout>
               </ProtectedRoute>
             }
           />

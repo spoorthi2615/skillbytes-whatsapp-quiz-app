@@ -18,6 +18,7 @@ from app.routes.ai_job_routes import router as ai_job_router
 from app.routes.content_routes import router as content_router
 from app.routes.favorites_routes import router as favorites_router
 from app.routes.session_routes import router as session_router
+from app.routes.assessment_routes import router as assessment_router
 
 router = APIRouter()
 router.include_router(auth_router)
@@ -35,6 +36,7 @@ router.include_router(ai_job_router)
 router.include_router(content_router)
 router.include_router(favorites_router)
 router.include_router(session_router)
+router.include_router(assessment_router)
 
 def success_response(data):
     return {"success": True, "data": data}

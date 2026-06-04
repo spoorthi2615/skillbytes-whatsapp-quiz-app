@@ -6,6 +6,10 @@ ACHIEVEMENTS = {
     "first_quiz": {"id": "first_quiz", "title": "First Blood", "description": "Complete your first quiz", "icon": "🎯", "xp_reward": 50},
     "streak_3": {"id": "streak_3", "title": "On Fire", "description": "Reach a 3-day streak", "icon": "🔥", "xp_reward": 100},
     "perfect_score": {"id": "perfect_score", "title": "Flawless Victory", "description": "Score 100% on a quiz", "icon": "⭐", "xp_reward": 200},
+    "first_ai_assessment": {"id": "first_ai_assessment", "title": "Self Examiner", "description": "Complete your first AI Assessment", "icon": "📊", "xp_reward": 100},
+    "perfect_ai_assessment": {"id": "perfect_ai_assessment", "title": "Assessment Ace", "description": "Score 100% on any AI Assessment", "icon": "🏆", "xp_reward": 300},
+    "coding_master": {"id": "coding_master", "title": "Coding Master", "description": "Draft and submit a coding challenge solution", "icon": "💻", "xp_reward": 150},
+    "interview_expert": {"id": "interview_expert", "title": "Interview Expert", "description": "Submit answers for interview preparation questions", "icon": "👔", "xp_reward": 150},
 }
 
 class AchievementService:

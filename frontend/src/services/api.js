@@ -225,4 +225,15 @@ export const sessionApi = {
   log: (data) => api.post('/api/learning-sessions', data).then(r => r.data),
 };
 
+// ---- Assessment API (Phase 2B) ----
+export const assessmentApi = {
+  generate: (data) => api.post('/api/assessments/generate', data).then(r => r.data),
+  list: () => api.get('/api/assessments').then(r => r.data),
+  get: (id) => api.get(`/api/assessments/${id}`).then(r => r.data),
+  submit: (id, data) => api.post(`/api/assessments/${id}/submit`, data).then(r => r.data),
+  submitCoding: (data) => api.post('/api/assessments/coding/submit', data).then(r => r.data),
+  export: (id) => api.get(`/api/assessments/${id}/export`).then(r => r.data),
+  mastery: () => api.get('/api/assessments/mastery').then(r => r.data),
+};
+
 export default api;

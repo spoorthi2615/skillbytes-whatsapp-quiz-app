@@ -105,6 +105,15 @@ class AnalyticsService:
         flashcards_studied = await ls_repo.collection.count_documents({"content_type": "flashcards", "action": "study", **c_match})
         summaries_read = await ls_repo.collection.count_documents({"content_type": "summary", "action": "view", **c_match})
 
+        # Phase 2B Analytics
+        from app.repositories.assessment_repo import assessment_repo
+        from app.repositories.assessment_attempt_repo import assessment_attempt_repo
+        from app.repositories.coding_submission_repo import coding_submission_repo
+        
+        assessments_count = await assessment_repo.collection.count_documents(c_match)
+        assessment_attempts_count = await assessment_attempt_repo.collection.count_documents(c_match)
+        coding_submissions_count = await coding_submission_repo.collection.count_documents(c_match)
+
         return {
             "daily_active_users": dau,
             "weekly_active_users": wau,
@@ -120,5 +129,8 @@ class AnalyticsService:
             "uploads_count": uploads_count,
             "generated_content_count": gen_content_count,
             "flashcards_studied": flashcards_studied,
-            "summaries_read": summaries_read
+            "summaries_read": summaries_read,
+            "assessments_count": assessments_count,
+            "assessment_attempts_count": assessment_attempts_count,
+            "coding_submissions_count": coding_submissions_count
         }

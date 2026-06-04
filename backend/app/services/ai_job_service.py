@@ -19,7 +19,7 @@ class AIJobService:
         supported_types = [
             "generate_quiz", "generate_flashcards", "generate_summary",
             "resume_analysis", "generate_interview_questions", "generate_coding_questions",
-            "summary", "revision_notes", "flashcards"
+            "summary", "revision_notes", "flashcards", "assessment"
         ]
         if job_type not in supported_types:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Unsupported job type: {job_type}")
@@ -51,6 +51,11 @@ class AIJobService:
         job_type = job["job_type"]
         mode = job.get("generation_mode", "Quick Study")
         
+        if job_type == "assessment":
+            from app.services.assessment_service import AssessmentService
+            await AssessmentService.process_assessment_job(job_id)
+            return
+            
         # Normalize job type
         norm_type = job_type.replace("generate_", "")
         if norm_type not in ["summary", "revision_notes", "flashcards"]:
